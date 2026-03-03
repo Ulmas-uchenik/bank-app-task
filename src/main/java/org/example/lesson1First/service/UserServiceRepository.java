@@ -13,26 +13,26 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface UserServiceRepository {
-    void addUser(UserDto userDto) throws NotUniqueUserIdException;
-    User getUserById(String userId) throws NotFoundUserException;
+    void addUser(UserDto userDto);
+    User getUserById(String userId);
     List<User> getAllUsers();
-    void deleteUser(String userId) throws NotFoundUserException;
-    UserSummaryDto getSummaryById(String userId) throws NotFoundUserException;
+    void deleteUser(String userId);
+    UserSummaryDto getSummaryById(String userId);
 
-    void createAccount(BankAccountRepositoryRequest bankAccount) throws NotFoundUserException, NotUniqueUserIdException;
-    void deleteAccount(BankAccountRepositoryRequest bankAccount) throws NotFoundUserException, NotUniqueUserIdException;
-    List<BankAccount> getAllUsersBankAccount(String userId) throws NotFoundUserException;
+    void createAccount(BankAccountRepositoryRequest bankAccount);
+    void deleteAccount(BankAccountRepositoryRequest bankAccount);
+    List<BankAccount> getAllUsersBankAccount(String userId);
 
-    Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, Integer pageSize, Integer pageCount) throws NotFoundUserException;
-    Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, TypeTransaction type, Integer pageSize, Integer pageCount) throws NotFoundUserException;
+    Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, Integer pageSize, Integer pageCount) ;
+    Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, TypeTransaction type, Integer pageSize, Integer pageCount) ;
 
-    BankAccount getUserBankAccountById(String userId, String bankId) throws NotFoundUserException, NotFoundUserBankAccountException;
-    BankAccount getAccountById(String bankAccountId) throws NotFoundUserException, NotFoundUserBankAccountException;
+    BankAccount getUserBankAccountById(String userId, String bankId);
+    BankAccount getAccountById(String bankAccountId);
 
-    String depositInUserAccount(String userId, String bankAccountId, String amount) throws NotFoundUserException, NotFoundUserBankAccountException;
-    String withdrawInUserAccount(String userId, String bankAccountId, String amount) throws Exception;
+    String depositInUserAccount(String userId, String bankAccountId, String amount);
+    String withdrawInUserAccount(String userId, String bankAccountId, String amount);
     void blockUserAccount(String userId, String bankAccountId);
 
-    String transferInUserAccountToAnotherUserAccount(String sourceUserId, String sourceBankAccountId, TargetBankAccountRequest targetBankAccountRequest) throws Exception;
-    List<TransactionResponse> getAllTransactionsFromBankAccount(String userId, String bankAccountId) throws NotFoundUserBankAccountException, NotFoundUserException;
+    String transferInUserAccountToAnotherUserAccount(String sourceUserId, String sourceBankAccountId, TargetBankAccountRequest targetBankAccountRequest);
+    List<TransactionResponse> getAllTransactionsFromBankAccount(String userId, String bankAccountId);
 }

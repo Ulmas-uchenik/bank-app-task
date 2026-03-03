@@ -38,7 +38,7 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     private final TransactionMapper transactionMapper;
 
     @Override
-    public void addUser(UserDto u) throws NotUniqueUserIdException {
+    public void addUser(UserDto u) {
         log.info("Добавили пльзователя");
         if (userRepository.findById(u.id()).isPresent()) {
             log.error("Добавили пльзователя - ERROR");
@@ -49,13 +49,13 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     }
 
     @Override
-    public User getUserById(String userId) throws NotFoundUserException {
+    public User getUserById(String userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException("Пользователь с id = %s. Несуществует".formatted(userId)));
     }
 
     // TODO доделать эту функцию
     @Override
-    public UserSummaryDto getSummaryById(String userId) throws NotFoundUserException {
+    public UserSummaryDto getSummaryById(String userId) {
         User user = getUserById(userId);
         List<BankAccount> bankAccounts = user.getBankAccounts();
 
@@ -87,13 +87,13 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     }
 
     @Override
-    public void deleteUser(String userId) throws NotFoundUserException {
+    public void deleteUser(String userId) {
         User user = this.getUserById(userId);
         userRepository.delete(user);
     }
 
     @Override
-    public void createAccount(BankAccountRepositoryRequest b) throws NotFoundUserException, NotUniqueUserIdException {
+    public void createAccount(BankAccountRepositoryRequest b) {
         if (bankAccountRepository.findById(b.number()).isPresent()) {
             throw new NotUniqueUserIdException("Такой банковский аккаунт с id " + b.number() + " уже существует, пожалуйста выберите другой");
         }
@@ -105,34 +105,34 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
 
     @Override
     @Transactional
-    public void deleteAccount(BankAccountRepositoryRequest b) throws NotFoundUserException, NotUniqueUserIdException {
+    public void deleteAccount(BankAccountRepositoryRequest b) {
         BankAccount forRemoveBankAccount = getUserBankAccountById(b.userId(), b.number());
         String number = forRemoveBankAccount.getNumber();
         bankAccountRepository.changeUserIdOnRemoved(number);
     }
 
     @Override
-    public List<BankAccount> getAllUsersBankAccount(String userId) throws NotFoundUserException {
+    public List<BankAccount> getAllUsersBankAccount(String userId) {
         User user = getUserById(userId);
         return user.getBankAccounts();
     }
 
     @Override
-    public BankAccount getUserBankAccountById(String userId, String bankId) throws NotFoundUserException, NotFoundUserBankAccountException {
+    public BankAccount getUserBankAccountById(String userId, String bankId) {
         User user = getUserById(userId);
         return user.getBankAccounts().stream().filter(it -> it.getNumber().equals(bankId)).findFirst()
                 .orElseThrow(() -> new NotFoundUserBankAccountException("Аккаун " + bankId + " не был найден, пожалуйста проверьте валидность данных"));
     }
 
     @Override
-    public BankAccount getAccountById(String bankAccountId) throws NotFoundUserException, NotFoundUserBankAccountException {
+    public BankAccount getAccountById(String bankAccountId) {
         return bankAccountRepository.findById(bankAccountId).orElseThrow(() -> new NotFoundUserBankAccountException("Аккаун " + bankAccountId + " не был найден, пожалуйста проверьте валидность данных"));
     }
 
 
     @Override
     @Transactional
-    public String depositInUserAccount(String userId, String bankAccountId, String amount) throws NotFoundUserException, NotFoundUserBankAccountException {
+    public String depositInUserAccount(String userId, String bankAccountId, String amount) {
         BankAccount bankAccount = getUserBankAccountById(userId, bankAccountId);
         checkBlocking(bankAccount);
 
@@ -149,7 +149,7 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     }
     @Override
     @Transactional
-    public String withdrawInUserAccount(String userId, String bankAccountId, String amount) throws Exception {
+    public String withdrawInUserAccount(String userId, String bankAccountId, String amount) {
         BankAccount bankAccount = getUserBankAccountById(userId, bankAccountId);
         checkBlocking(bankAccount);
 
@@ -178,7 +178,7 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
 
     @Override
     @Transactional
-    public String transferInUserAccountToAnotherUserAccount(String sourceUserId, String sourceBankAccountId, TargetBankAccountRequest target) throws Exception {
+    public String transferInUserAccountToAnotherUserAccount(String sourceUserId, String sourceBankAccountId, TargetBankAccountRequest target) {
         BankAccount sourceBankAccount = getUserBankAccountById(sourceUserId, sourceBankAccountId);
         BankAccount targetBankAccount = getUserBankAccountById(target.userId(), target.bankId());
         BigDecimal amountBigDecimal = new BigDecimal(target.amount());
@@ -206,20 +206,20 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     }
 
     @Override
-    public List<TransactionResponse> getAllTransactionsFromBankAccount(String userId, String bankAccountId) throws NotFoundUserBankAccountException, NotFoundUserException {
+    public List<TransactionResponse> getAllTransactionsFromBankAccount(String userId, String bankAccountId) {
         BankAccount bankAccount = getUserBankAccountById(userId, bankAccountId);
         Stream<Transaction> transactionStream = Stream.concat(bankAccount.getTransactionsWhereImSource().stream(), bankAccount.getTransactionsWhereImTarget().stream());
         return transactionStream.sorted(Comparator.comparing(Transaction::getDate).reversed()).map(transactionMapper::toResponse).toList();
     }
 
     @Override
-    public Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, Integer pageSize, Integer pageCount) throws NotFoundUserException {
+    public Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, Integer pageSize, Integer pageCount) {
         getUserBankAccountById(userId, bankAccountId);
         return transactionRepository.findAllBy(bankAccountId, PageRequest.of(pageCount, pageSize));
     }
 
     @Override
-    public Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, TypeTransaction type, Integer pageSize, Integer pageCount) throws NotFoundUserException {
+    public Page<Transaction> getAllBankAccountTransactionsPageable(String userId, String bankAccountId, TypeTransaction type, Integer pageSize, Integer pageCount) {
         getUserBankAccountById(userId, bankAccountId);
         return transactionRepository.findAllBy(bankAccountId, type, PageRequest.of(pageCount, pageSize));
     }
