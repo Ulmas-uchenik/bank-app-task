@@ -54,8 +54,7 @@ public class SecurityConfiguration {
     };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, OAuthCookieFilter oAuthCookieFilter, JwtAuthFilter jwtAuthFilter, MyAuthenticationSuccessHandler myAuthenticationSuccessHandler) {
-        http.addFilterAfter(oAuthCookieFilter, SecurityContextHolderFilter.class);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter, MyAuthenticationSuccessHandler myAuthenticationSuccessHandler) {
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         http
@@ -81,18 +80,6 @@ public class SecurityConfiguration {
                 .logout(logout -> logout.logoutUrl("/login/logout")
                         .logoutSuccessUrl("/login/form?logout=logout") // После выхода
                         .permitAll())
-                .oauth2Login(oauth -> oauth
-                        .loginPage("/login/google")
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorization")
-                        )
-                        .successHandler(myAuthenticationSuccessHandler)
-                        .failureUrl("/login/form?error")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService())
-                        )
-                        .securityContextRepository(null)
-                )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(entryPointFormAuthentication));
         return http.build();

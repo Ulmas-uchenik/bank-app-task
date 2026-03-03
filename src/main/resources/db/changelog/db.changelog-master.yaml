@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Ulmas416
+      changes:
+        - sqlFile:
+            path: v1/create-tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 2
+      author: Ulmas416
+      changes:
+        - sqlFile:
+            path: v1/insert-test-data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

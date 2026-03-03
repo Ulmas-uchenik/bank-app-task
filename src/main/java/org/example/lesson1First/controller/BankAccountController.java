@@ -3,7 +3,6 @@ package org.example.lesson1First.controller;
 //import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.example.lesson1First.entity.dto.*;
-import org.example.lesson1First.enums.Currency;
 import org.example.lesson1First.enums.TypeTransaction;
 import org.example.lesson1First.exception.NotFoundUserBankAccountException;
 import org.example.lesson1First.exception.NotFoundUserException;
@@ -32,24 +31,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/v3/accounts")
 //@Tag(name = "Пользователи", description = "API для управления пользователями")
-public class BankAccountControllerRepository {
+public class BankAccountController {
 
     private final UserServiceRepository userService;
-    private final UserServiceRepository userServiceRepository;
 
 
-    public BankAccountControllerRepository(UserServiceRepository userService, UserServiceRepository userServiceRepository){
+    public BankAccountController(UserServiceRepository userService){
         this.userService = userService;
-
-        String testId = "testId";
-        String firstTestAccount = "firstTestAccount";
-        String secondTestAccount = "secondTestAccount";
-
-        try {userService.addUser(new UserDto(testId, "testName", "email@gmail.com", "+79999999999"));} catch (Exception e) {}
-        try {userService.createAccount(new BankAccountRepositoryRequest(testId, firstTestAccount, Currency.RUB.name()));} catch (Exception e) {}
-        try {userService.createAccount(new BankAccountRepositoryRequest(testId, secondTestAccount, Currency.RUB.name()));} catch (Exception e) {}
-//        try {userService.depositInUserAccount(testId, firstTestAccount, "20");} catch (Exception e) {}
-        this.userServiceRepository = userServiceRepository;
     }
 
 
@@ -81,7 +69,7 @@ public class BankAccountControllerRepository {
 
     @GetMapping("{userId}/summary")
     public ResponseEntity<?> summary(@PathVariable("userId") String userId ){
-        return ResponseEntity.ok(userServiceRepository.getSummaryById(userId));
+        return ResponseEntity.ok(userService.getSummaryById(userId));
     }
 
     @DeleteMapping("{userId}")

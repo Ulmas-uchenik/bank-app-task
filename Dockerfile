@@ -1,6 +1,6 @@
 FROM maven:3.8.5-openjdk-17 AS builder
 
-LABEL authors="halik"
+LABEL authors="Ulma416"
 WORKDIR /opt/app
 COPY pom.xml mvnw ./
 COPY .mvn .mvn

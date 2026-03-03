@@ -1,4 +1,4 @@
-name: account-management-service
+name: bank-app-task
 
 networks:
   bank-account:
@@ -24,7 +24,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_panel
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=admin
@@ -37,7 +36,6 @@ services:
 
   db:
     image: postgres:17.4
-    container_name: postgres_db
     environment:
       - POSTGRES_DB=db
       - POSTGRES_USER=postgres

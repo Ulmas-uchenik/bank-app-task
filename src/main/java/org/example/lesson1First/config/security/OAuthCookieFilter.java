@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
-@Component
+//@Component
 @Log4j2
 @RequiredArgsConstructor
 public class OAuthCookieFilter extends OncePerRequestFilter {

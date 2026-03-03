@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Log4j2
 public class SpringConfiguration {
-    private final TokenRepository tokenRepository;
+//    private final TokenRepository tokenRepository;
 
-    @Scheduled(fixedRate = 86400000) // Раз в сутки
-    @Transactional
-    public void cleanExpiredTokens() {
-        log.warn("TOKENS WAS CLEANED");
-        tokenRepository.deleteAllByExpiredTrueOrRevokedTrue();
-    }
+//    @Scheduled(fixedRate = 86400000) // Раз в сутки
+//    @Transactional
+//    public void cleanExpiredTokens() {
+//        log.warn("TOKENS WAS CLEANED");
+//        tokenRepository.deleteAllByExpiredTrueOrRevokedTrue();
+//    }
 }
