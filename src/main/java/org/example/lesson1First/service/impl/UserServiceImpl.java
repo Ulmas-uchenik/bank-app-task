@@ -13,7 +13,7 @@ import org.example.lesson1First.exception.*;
 import org.example.lesson1First.repository.BankAccountRepository;
 import org.example.lesson1First.repository.TransactionRepository;
 import org.example.lesson1First.repository.UserRepository;
-import org.example.lesson1First.service.UserServiceRepository;
+import org.example.lesson1First.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class UserServiceRepositoryImpl implements UserServiceRepository {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BankAccountRepository bankAccountRepository;
@@ -40,7 +40,7 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
     @Override
     public void addUser(UserDto u) {
         log.info("Добавили пльзователя");
-        if (userRepository.findById(u.id()).isPresent()) {
+        if (userRepository.existsById(u.id())) {
             log.error("Добавили пльзователя - ERROR");
             throw new NotUniqueUserIdException("Пользователь с id " + u.id() + " уже существует");
         }
@@ -88,13 +88,15 @@ public class UserServiceRepositoryImpl implements UserServiceRepository {
 
     @Override
     public void deleteUser(String userId) {
-        User user = this.getUserById(userId);
-        userRepository.delete(user);
+        if (userRepository.existsById(userId))
+            userRepository.deleteById(userId);
+        else
+            throw new NotFoundUserException("Мы не можем удалить пользователя по id " + userId + "так как такого пользователя не существует");
     }
 
     @Override
     public void createAccount(BankAccountRepositoryRequest b) {
-        if (bankAccountRepository.findById(b.number()).isPresent()) {
+        if (bankAccountRepository.existsById(b.number())) {
             throw new NotUniqueUserIdException("Такой банковский аккаунт с id " + b.number() + " уже существует, пожалуйста выберите другой");
         }
 

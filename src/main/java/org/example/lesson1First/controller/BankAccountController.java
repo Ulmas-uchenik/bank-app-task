@@ -7,7 +7,7 @@ import org.example.lesson1First.enums.TypeTransaction;
 import org.example.lesson1First.exception.NotFoundUserBankAccountException;
 import org.example.lesson1First.exception.NotFoundUserException;
 import org.example.lesson1First.exception.NotUniqueUserIdException;
-import org.example.lesson1First.service.UserServiceRepository;
+import org.example.lesson1First.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +33,10 @@ import java.util.Map;
 //@Tag(name = "Пользователи", description = "API для управления пользователями")
 public class BankAccountController {
 
-    private final UserServiceRepository userService;
+    private final UserService userService;
 
 
-    public BankAccountController(UserServiceRepository userService){
+    public BankAccountController(UserService userService){
         this.userService = userService;
     }
 

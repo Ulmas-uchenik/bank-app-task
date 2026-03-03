@@ -5,14 +5,11 @@ import org.example.lesson1First.entity.db.Transaction;
 import org.example.lesson1First.entity.db.User;
 import org.example.lesson1First.entity.dto.*;
 import org.example.lesson1First.enums.TypeTransaction;
-import org.example.lesson1First.exception.NotFoundUserBankAccountException;
-import org.example.lesson1First.exception.NotFoundUserException;
-import org.example.lesson1First.exception.NotUniqueUserIdException;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public interface UserServiceRepository {
+public interface UserService {
     void addUser(UserDto userDto);
     User getUserById(String userId);
     List<User> getAllUsers();
