@@ -4,9 +4,9 @@ LABEL authors="Ulma416"
 WORKDIR /opt/app
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
-RUN ./mvnw dependency:go-offline
+RUN mvn dependency:go-offline
 COPY src src
-RUN ./mvnw clean install
+RUN mvn clean install
 
 FROM eclipse-temurin:17-jre-alpine
 
